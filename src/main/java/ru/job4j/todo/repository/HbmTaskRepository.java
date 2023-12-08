@@ -30,6 +30,7 @@ public class HbmTaskRepository implements TaskRepository {
             rsl = Optional.of(task);
         } catch (Exception e) {
             session.getTransaction().rollback();
+            LOGGER.error("Exception during saving new task", e);
         } finally {
             session.close();
         }
@@ -46,7 +47,7 @@ public class HbmTaskRepository implements TaskRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOGGER.error("Exception during updating task", e);
+            LOGGER.error("Exception during finding new tasks", e);
         } finally {
             session.close();
         }
@@ -65,7 +66,7 @@ public class HbmTaskRepository implements TaskRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            e.printStackTrace();
+            LOGGER.error("Exception during finding new tasks", e);
         } finally {
             session.close();
         }
@@ -84,7 +85,7 @@ public class HbmTaskRepository implements TaskRepository {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            e.printStackTrace();
+            LOGGER.error("Exception during finding doned tasks", e);
         } finally {
             session.close();
         }
