@@ -38,6 +38,26 @@ public class HbmTaskRepository implements TaskRepository {
     }
 
     @Override
+    public Optional<Task> getById(int id) {
+        Session session = sf.openSession();
+        Optional<Task> rsl = Optional.empty();
+        try {
+            session.beginTransaction();
+            Query<Task> query = session.createQuery(
+                    "from Task as t where t.id = :fId", Task.class);
+            query.setParameter("fId", id);
+            rsl = query.uniqueResultOptional();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return rsl;
+    }
+
+    @Override
     public List<Task> findAll() {
         Session session = sf.openSession();
         List<Task> rsl = new ArrayList<>();

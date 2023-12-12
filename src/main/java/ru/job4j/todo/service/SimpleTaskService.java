@@ -20,6 +20,11 @@ public class SimpleTaskService implements TaskService{
     }
 
     @Override
+    public Optional<Task> getById(int id) {
+        return taskRepository.getById(id);
+    }
+
+    @Override
     public List<Task> findAll() {
         return taskRepository.findAll();
     }

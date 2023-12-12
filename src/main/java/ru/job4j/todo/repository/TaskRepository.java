@@ -9,6 +9,8 @@ public interface TaskRepository {
 
     Optional<Task> save(Task task);
 
+    Optional<Task> getById(int id);
+
     List<Task> findAll();
 
     List<Task> findNew();
