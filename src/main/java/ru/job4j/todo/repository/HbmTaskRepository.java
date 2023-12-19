@@ -8,6 +8,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class HbmTaskRepository implements TaskRepository {
         Session session = sf.openSession();
         Optional<Task> rsl = Optional.empty();
         try {
+            task.setCreated(LocalDateTime.now());
             session.beginTransaction();
             session.save(task);
             session.getTransaction().commit();
@@ -63,7 +65,7 @@ public class HbmTaskRepository implements TaskRepository {
         List<Task> rsl = new ArrayList<>();
         try {
             session.beginTransaction();
-            rsl = session.createQuery("from ru.job4j.todo.Task", Task.class).list();
+            rsl = session.createQuery("from ru.job4j.todo.model.Task", Task.class).list();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
@@ -81,7 +83,7 @@ public class HbmTaskRepository implements TaskRepository {
         try {
             session.beginTransaction();
             Query<Task> query = session.createQuery(
-                    "from Task as i where not i.done", Task.class);
+                    "from Task as i where i.done = false", Task.class);
             rsl = query.list();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -100,7 +102,7 @@ public class HbmTaskRepository implements TaskRepository {
         try {
             session.beginTransaction();
             Query<Task> query = session.createQuery(
-                    "from Task as i where i.done", Task.class);
+                    "from Task as i where i.done = true", Task.class);
             rsl = query.list();
             session.getTransaction().commit();
         } catch (Exception e) {

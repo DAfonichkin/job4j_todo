@@ -16,7 +16,19 @@ public class IndexController {
 
     @GetMapping({"/", "/index"})
     public String getIndex(Model model, HttpSession session) {
-        model.addAttribute("task", taskService.findAll());
+        model.addAttribute("tasks", taskService.findAll());
+        return "index";
+    }
+
+    @GetMapping({"/done"})
+    public String getDone(Model model, HttpSession session) {
+        model.addAttribute("tasks", taskService.findDone());
+        return "index";
+    }
+
+    @GetMapping({"/new"})
+    public String getNew(Model model, HttpSession session) {
+        model.addAttribute("tasks", taskService.findNew());
         return "index";
     }
 
