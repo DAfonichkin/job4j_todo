@@ -22,13 +22,13 @@ public class IndexController {
 
     @GetMapping({"/done"})
     public String getDone(Model model, HttpSession session) {
-        model.addAttribute("tasks", taskService.findDone());
+        model.addAttribute("tasks", taskService.findByDone(true));
         return "index";
     }
 
     @GetMapping({"/new"})
     public String getNew(Model model, HttpSession session) {
-        model.addAttribute("tasks", taskService.findNew());
+        model.addAttribute("tasks", taskService.findByDone(false));
         return "index";
     }
 

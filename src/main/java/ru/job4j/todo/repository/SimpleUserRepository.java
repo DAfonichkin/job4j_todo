@@ -1,51 +1,94 @@
 package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.stereotype.Repository;
-import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 @AllArgsConstructor
-public class HbmTaskRepository implements TaskRepository {
-
+public class SimpleUserRepository {
     private final SessionFactory sf;
-    private static final Logger LOGGER = Logger.getLogger(HbmTaskRepository.class);
 
-    @Override
-    public Optional<Task> save(Task task) {
+    public Optional<User> create(User user) {
         Session session = sf.openSession();
-        Optional<Task> rsl = Optional.empty();
+        Optional<User> rsl = Optional.empty();
         try {
             session.beginTransaction();
-            session.save(task);
+            session.save(user);
             session.getTransaction().commit();
-            rsl = Optional.of(task);
+            rsl = Optional.of(user);
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOGGER.error("Exception during saving new task", e);
         } finally {
             session.close();
         }
         return rsl;
     }
 
-    @Override
-    public Optional<Task> getById(int id) {
+    public void update(User user) {
         Session session = sf.openSession();
-        Optional<Task> rsl = Optional.empty();
         try {
             session.beginTransaction();
-            Query<Task> query = session.createQuery(
-                    "from Task as t where t.id = :fId", Task.class);
-            query.setParameter("fId", id);
+            session.createQuery(
+                            "UPDATE User SET password = :fPassword, login = :fLogin WHERE id = :fId")
+                    .setParameter("fPassword", user.getPassword())
+                    .setParameter("fLogin", user.getLogin())
+                    .setParameter("fId", user.getId())
+                    .executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+    }
+
+    public void delete(int userId) {
+        Session session = sf.openSession();
+        try {
+            session.beginTransaction();
+            session.createQuery(
+                            "DELETE User WHERE id = :fId")
+                    .setParameter("fId", userId)
+                    .executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+    }
+
+    public List<User> findAllOrderById() {
+        Session session = sf.openSession();
+        List<User> rsl = new ArrayList<>();
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery("from User ORDER BY id ");
+            rsl = query.list();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return rsl;
+    }
+
+    public Optional<User> findById(int userId) {
+        Session session = sf.openSession();
+        Optional<User> rsl = Optional.empty();
+        try {
+            session.beginTransaction();
+            Query<User> query = session.createQuery(
+                    "from User as u where u.id = :fId", User.class);
+            query.setParameter("fId", userId);
             rsl = query.uniqueResultOptional();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -57,97 +100,40 @@ public class HbmTaskRepository implements TaskRepository {
         return rsl;
     }
 
-    @Override
-    public List<Task> findAll() {
+    public List<User> findByLikeLogin(String key) {
         Session session = sf.openSession();
-        List<Task> rsl = new ArrayList<>();
+        List<User> rsl = new ArrayList<>();
         try {
             session.beginTransaction();
-            rsl = session.createQuery("from ru.job4j.todo.model.Task", Task.class).list();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            LOGGER.error("Exception during finding new tasks", e);
-        } finally {
-            session.close();
-        }
-        return rsl;
-    }
-
-    @Override
-    public List<Task> findByDone(boolean isDone) {
-        Session session = sf.openSession();
-        List<Task> rsl = new ArrayList<>();
-        try {
-            session.beginTransaction();
-            Query<Task> query = session.createQuery(
-                    "from Task as i where i.done = :fDone", Task.class);
-            query.setParameter("fDone", isDone);
+            Query query = session.createQuery("from User as u WHERE u.login like :fLogin");
+            query.setParameter("fLogin", key);
             rsl = query.list();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOGGER.error("Exception during finding new tasks", e);
+            e.printStackTrace();
         } finally {
             session.close();
         }
         return rsl;
     }
 
-    @Override
-    public boolean update(Task task) {
+    public Optional<User> findByLogin(String login) {
         Session session = sf.openSession();
-        boolean rsl = false;
+        Optional<User> rsl = Optional.empty();
         try {
             session.beginTransaction();
-            session.update(task);
+            Query<User> query = session.createQuery(
+                    "from User as u where u.login = :fLogin", User.class);
+            query.setParameter("fLogin", login);
+            rsl = query.uniqueResultOptional();
             session.getTransaction().commit();
-            rsl = true;
         } catch (Exception e) {
             session.getTransaction().rollback();
-            LOGGER.error("Exception during updating task", e);
+            e.printStackTrace();
         } finally {
             session.close();
         }
         return rsl;
     }
-
-    @Override
-    public boolean setDone(int id) {
-        Session session = sf.openSession();
-        boolean rsl = false;
-        try {
-            session.beginTransaction();
-            Query<Task> query = session.createQuery(
-                    "UPDATE Task SET done = true WHERE id = :fId");
-            query.setParameter("fId", id).executeUpdate();
-            session.getTransaction().commit();
-            rsl = true;
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            LOGGER.error("Exception during updating task", e);
-        } finally {
-            session.close();
-        }
-        return rsl;
-    }
-
-    @Override
-    public boolean delete(Task task) {
-        Session session = sf.openSession();
-        boolean rsl = false;
-        try {
-            session.beginTransaction();
-            session.delete(task);
-            session.getTransaction().commit();
-            rsl = true;
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            LOGGER.error("Exception during deleting task", e);
-        } finally {
-            session.close();
-        }
-        return rsl;
-    }
-
 }

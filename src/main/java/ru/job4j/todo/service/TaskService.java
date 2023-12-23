@@ -13,11 +13,11 @@ public interface TaskService {
 
     List<Task> findAll();
 
-    List<Task> findNew();
-
-    List<Task> findDone();
+    List<Task> findByDone(boolean isDone);
 
     boolean update(Task task);
+
+    boolean setDone(int id);
 
     boolean delete(Task task);
 }

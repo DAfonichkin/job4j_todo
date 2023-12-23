@@ -1,21 +1,19 @@
 package ru.job4j.todo.model;
 
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
 @Entity
 @Table(name = "tasks")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
 public class Task {
 
     @Id
@@ -28,6 +26,6 @@ public class Task {
     @Column
     private boolean done;
     @Column
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 
 }

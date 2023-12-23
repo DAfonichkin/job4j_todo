@@ -6,19 +6,25 @@
 Благодаря нему Вы не забудете про самое важное!
 
 ## _Стек технологий:_
-Spring boot 
+Spring boot 2.7.6
 
-Thymeleaf 
+Thymeleaf 2.7.6
 
-Bootstrap 
+Bootstrap 5.2.3
 
-Hibernate
+Hibernate 5.6.11
 
-PostgreSql
+PostgreSql 15.3
+
+Lombok 1.18.22
+
+log4j 1.2.17
 
 ## _Требования к окружению:_
 Java 17
+
 Maven 3.8
+
 PostgresSQL 14
 
 ## _Запуск проекта:_
