@@ -1,11 +1,7 @@
 package ru.job4j.todo.model;
 
 import lombok.*;
-
 import javax.persistence.*;
-
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 
 @Entity
