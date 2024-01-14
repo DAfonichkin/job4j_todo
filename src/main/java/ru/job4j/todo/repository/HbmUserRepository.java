@@ -29,8 +29,14 @@ public class HbmUserRepository implements UserRepository {
 
     @Override
     public Optional<User> save(User user) {
-        crudRepository.run(session -> session.save(user));
-        return Optional.ofNullable(user);
+        Optional<User> rsl = Optional.empty();
+        try {
+            crudRepository.run(session -> session.save(user));
+            rsl = Optional.of(user);
+        } catch (Exception e) {
+            LOGGER.error("Exception during save user", e);
+        }
+        return rsl;
     }
 
     @Override
