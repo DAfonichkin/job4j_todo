@@ -23,5 +23,8 @@ public class Task {
     private boolean done;
     @Column
     private LocalDateTime created = LocalDateTime.now();
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

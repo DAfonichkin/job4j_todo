@@ -5,7 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @AllArgsConstructor
@@ -14,14 +17,15 @@ public class TaskController {
 
     private TaskService taskService;
 
-
     @GetMapping("/create")
     public String getCreationPage(Model model) {
         return "tasks/create";
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Task task, Model model) {
+    public String create(@ModelAttribute Task task, HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        task.setUser(user);
         if (taskService.save(task).isPresent()) {
             return "redirect:/";
         }
@@ -51,7 +55,9 @@ public class TaskController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Task task, Model model) {
+    public String update(@ModelAttribute Task task, Model model, HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        task.setUser(user);
         if (!taskService.update(task)) {
             model.addAttribute("message", "Задача с указанным идентификатором не найдена");
             return "errors/404";
