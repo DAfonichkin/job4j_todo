@@ -23,8 +23,7 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Task task, HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
+    public String create(@ModelAttribute Task task,  @SessionAttribute("user") User user) {
         task.setUser(user);
         if (taskService.save(task).isPresent()) {
             return "redirect:/";
@@ -55,8 +54,8 @@ public class TaskController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Task task, Model model, HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
+
+    public String update(@ModelAttribute Task task, Model model, @SessionAttribute("user") User user) {
         task.setUser(user);
         if (!taskService.update(task)) {
             model.addAttribute("message", "Задача с указанным идентификатором не найдена");
