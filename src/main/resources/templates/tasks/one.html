@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 
     <!--  Зависимости Bootstrap-->
@@ -23,9 +23,13 @@
                        placeholder="Название задачи">
             </div>
             <div class="mb-3">
+                <label for="priority" class="form-label"><b>Приоритет</b></label>
+                <input type="text" class="form-control" id="priority" disabled="disabled" name="priority"  th:field="*{priority.name}" placeholder="Приоритет">
+            </div>
+            <div class="mb-3">
                 <label for="description" class="form-label"><b>Описание</b></label>
                 <textarea class="form-control" id="description" disabled="disabled" name="description"  th:field="*{description}" rows="25"
-                        placeholder="Опишите задачу"> readonly = "readonly"</textarea>
+                        placeholder="Опишите задачу"> </textarea>
             </div>
             <div class="mb-3 row">
                 <div class="col-6"></div>
