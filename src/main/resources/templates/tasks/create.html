@@ -30,9 +30,17 @@
                     <option th:each="pr : ${priorities}" th:value="${pr.id}" th:text="${pr.name}"></option>
                 </select>
             </div>
+            <div class="form-group">
+                <label for="idCategories" name="categories"><b>Категория</b></label>
+                <select class="form-control" id="idCategories" name="idCategories" multiple>
+                    <option th:each="category: ${categories}"
+                            th:text="${category.name}"
+                            th:value="${category.id}"></option>
+                </select>
+            </div>
             <div class="mb-3">
                 <label for="description" class="form-label"><b>Описание</b></label>
-                <textarea class="form-control" id="description" name="description" rows="25"
+                <textarea class="form-control" id="description" name="description" rows="5"
                           placeholder="Опишите задачу"></textarea>
             </div>
             <div class="mb-3 row">
