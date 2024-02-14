@@ -3,6 +3,7 @@ package ru.job4j.todo.model;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public class Task {
     @Column
     private boolean done;
     @Column
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created = LocalDateTime.now(ZoneId.of("UTC"));
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;

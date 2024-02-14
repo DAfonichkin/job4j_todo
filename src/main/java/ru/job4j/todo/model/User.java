@@ -3,6 +3,7 @@ package ru.job4j.todo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.TimeZone;
 
 @Entity
 @Table(name = "todo_user")
@@ -20,4 +21,6 @@ public class User {
     private String login;
     @Column
     private String password;
+    @Column
+    private TimeZone timezone;
 }
